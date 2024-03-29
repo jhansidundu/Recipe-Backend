@@ -1,15 +1,14 @@
-import { pool } from "../db/databasePool.js";
-import { insertUser } from "../db/sqlQueries.js";
-import { validateEmail } from "../util/validations.js";
-import { validatePassword } from "../util/validations.js";
-import { validateMobileNumber } from "../util/validations.js";
-import { createPasswordHash } from "../util/cryptUtil.js";
-import { getNamebyEmail } from "../db/sqlQueries.js";
-import { generateAccessToken } from "../util/jwtUtil.js";
 import bcrypt from "bcrypt";
-export const Signup = async (req, res, next) => {
+import { getIdbyEmail, getNamebyEmail, insertUser } from "../db/users.js";
+import { createPasswordHash } from "../util/cryptUtil.js";
+import { generateAccessToken } from "../util/jwtUtil.js";
+import {
+  validateEmail,
+  validateMobileNumber,
+  validatePassword,
+} from "../util/validations.js";
+export const signup = async (req, res, next) => {
   try {
-    console.log(req.body);
     const { name, email, phoneNumber, password } = req.body;
     const isEmailValid = validateEmail(email);
     const isPassValid = validatePassword(password);
@@ -21,22 +20,25 @@ export const Signup = async (req, res, next) => {
     }
     const encryptedPassword = await createPasswordHash(password);
     await insertUser(name, email, phoneNumber, encryptedPassword);
+    const id = getIdbyEmail(email);
     return res.json({
       success: true,
       message: "user successfully login",
       email: email,
       name: name,
+      id: id[0][0].id,
     });
   } catch (e) {
     next(e);
   }
 };
 
-export const Login = async (req, res, next) => {
+export const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
     const existingUser = await getNamebyEmail(email);
     console.log(existingUser);
+
     if (!existingUser) {
       throw new Error("user not exist");
     }
@@ -44,8 +46,9 @@ export const Login = async (req, res, next) => {
       const hashedPassword = existingUser[0][0].password;
       const validation = await bcrypt.compare(password, hashedPassword);
       if (validation) {
-        const { name, email, phoneNumber, password } = existingUser[0][0];
+        const { id, name, email, phoneNumber, password } = existingUser[0][0];
         const user = {
+          id,
           name,
           email,
           phoneNumber,
@@ -54,9 +57,7 @@ export const Login = async (req, res, next) => {
         const accessToken = generateAccessToken(user);
         return res.json({
           success: true,
-          data: { accessToken },
-          email: email,
-          name: name,
+          data: { accessToken, email, name },
         });
       } else {
         res.status(400);

@@ -2,12 +2,18 @@ import { insertBookmark } from "../db/bookmark.js";
 
 export const addBookmark = async (req, res, next) => {
   try {
+    const { id: userId } = req.user;
     const { recipeId } = req.body;
-    const userId = req.user.id;
     await insertBookmark(userId, recipeId);
     return res.json({ success: true });
-  } catch (e) {
-    next(e);
-    // res.json({ Error: "error" });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getAllBookmarks = (req, res, next) => {
+  try {
+  } catch (err) {
+    next(err);
   }
 };

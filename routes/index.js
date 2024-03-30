@@ -1,9 +1,9 @@
-import userRoutes from "./users.js";
-import bookmarkRoutes from "./bookmarks.js";
 import express from "express";
+import bookmarkRoutes from "./bookmark.js";
+import userRoutes from "./users.js";
 
 const router = express.Router();
 
 router.use("/user", userRoutes);
-router.use("/liked", bookmarkRoutes);
+router.use("/recipe/bookmark", bookmarkRoutes);
 export default router;

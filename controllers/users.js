@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import { getIdbyEmail, getNamebyEmail, insertUser } from "../db/users.js";
+import { findUserIdByEmail, findUserByEmail, insertUser } from "../db/users.js";
 import { createPasswordHash } from "../util/cryptUtil.js";
 import { generateAccessToken } from "../util/jwtUtil.js";
 import {
@@ -16,11 +16,11 @@ export const signup = async (req, res, next) => {
 
     if (!(isEmailValid && isPassValid && isMobileValid)) {
       res.status("400");
-      throw new Error("invalid input");
+      throw new Error("Invalid input");
     }
     const encryptedPassword = await createPasswordHash(password);
     await insertUser(name, email, phoneNumber, encryptedPassword);
-    const id = getIdbyEmail(email);
+    const id = findUserIdByEmail(email);
     return res.json({
       success: true,
       message: "user successfully login",
@@ -36,7 +36,7 @@ export const signup = async (req, res, next) => {
 export const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-    const existingUser = await getNamebyEmail(email);
+    const existingUser = await findUserByEmail(email);
     console.log(existingUser);
 
     if (!existingUser) {

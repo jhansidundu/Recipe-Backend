@@ -1,4 +1,8 @@
-import { deleteBookmark, insertBookmark } from "../db/bookmark.js";
+import {
+  deleteBookmark,
+  insertBookmark,
+  findAllBookmarksByUserId,
+} from "../db/bookmark.js";
 
 export const addBookmark = async (req, res, next) => {
   try {
@@ -22,10 +26,10 @@ export const removeBookmark = async (req, res, next) => {
   }
 };
 
-export const getAllBookmarks = (req, res, next) => {
+export const getAllBookmarks = async (req, res, next) => {
   try {
     const id = req.user.id;
-    const response = allbookmark(id);
+    const response = await findAllBookmarksByUserId(id);
     if (!response) {
       throw new Error("no liked recipes");
     }

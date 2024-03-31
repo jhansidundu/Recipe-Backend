@@ -41,7 +41,6 @@ export const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
     const existingUser = await findUserByEmail(email);
-    console.log(existingUser);
 
     if (!existingUser) {
       throw new Error("user not exist");

@@ -8,8 +8,8 @@ export const insertBookmark = async (userId, recipeId) => {
 
 export const findAllBookmarksByUserId = async (userId) => {
   const sql = `select recipeId from bookmark where userId=?`;
-  const res = await pool.query(sql, [userId]);
-  return res;
+  const [results] = await pool.query(sql, [userId]);
+  return results;
 };
 
 export const deleteBookmark = async (userId, recipeId) => {

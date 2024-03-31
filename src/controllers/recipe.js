@@ -15,11 +15,23 @@ export const getPopularRecipes = async (_, res, next) => {
 export const getSearchedRecipes = async (req, res, next) => {
   try {
     const { query, offset = 0, number = 10 } = req.query;
-    console.log(query);
     const recipes = await axios.get(
       `${SPOONACULAR_API_URL}/complexSearch?apiKey=${API_KEY}&query=${query}&offset=${offset}&number=${number}`
     );
     return res.json({ success: true, data: recipes.data });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getRecipeDetails = async (req, res, next) => {
+  try {
+    const { recipeId } = req.params;
+    const response = await axios.get(
+      `${SPOONACULAR_API_URL}/${recipeId}/information?includeNutrition=true&apiKey=${API_KEY}`
+    );
+    const details = response.data;
+    res.json({ success: true, data: details });
   } catch (err) {
     next(err);
   }

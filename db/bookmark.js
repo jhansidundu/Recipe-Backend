@@ -16,3 +16,9 @@ export const deleteBookmark = async (userId, recipeId) => {
   const sql = `delete from bookmark where userId=? and recipeId=?`;
   await pool.query(sql, [userId, recipeId]);
 };
+
+export const allbookmark = async (userId) => {
+  const sql = `select recipeId from bookMark where usesrId = ?`;
+  const res = await pool.query(sql, [userId]);
+  return res;
+};

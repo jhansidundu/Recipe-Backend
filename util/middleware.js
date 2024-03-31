@@ -1,3 +1,5 @@
+import jwt from "jsonwebtoken";
+
 export const notFound = (req, res, next) => {
   res.status(404);
   const error = new Error(`Not Found - ${req.originalUrl}`);

@@ -20,7 +20,9 @@ export const signup = async (req, res, next) => {
     }
     const encryptedPassword = await createPasswordHash(password);
     await insertUser(name, email, phoneNumber, encryptedPassword);
-    const id = findUserIdByEmail(email);
+    const id = await findUserIdByEmail(email);
+    console.log(id);
+    console.log(id[0][0]);
     return res.json({
       success: true,
       message: "user successfully login",

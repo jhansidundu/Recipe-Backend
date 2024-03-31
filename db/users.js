@@ -9,12 +9,12 @@ export const insertUser = async (name, email, phoneNumber, password) => {
 
 export const findUserByEmail = async (email) => {
   const sql = `select id, name, email, phoneNumber, password from users where email=?`;
-  const res = await pool.query(sql, [email]);
-  return res;
+  const [[user]] = await pool.query(sql, [email]);
+  return user;
 };
 
 export const findUserIdByEmail = async (email) => {
   const sql = `select id from users where email=?`;
-  const res = await pool.query(sql, [email]);
-  return res;
+  const [[{ id }]] = await pool.query(sql, [email]);
+  return id;
 };

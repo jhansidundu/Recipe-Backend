@@ -2,6 +2,7 @@ import {
   deleteBookmark,
   insertBookmark,
   findAllBookmarksByUserId,
+  checkIfAlreadyBookmarked,
 } from "../db/bookmark.js";
 import axios from "axios";
 import { API_KEY, SPOONACULAR_API_URL } from "../util/constants.js";
@@ -10,7 +11,10 @@ export const addBookmark = async (req, res, next) => {
   try {
     const { id: userId } = req.user;
     const { recipeId } = req.body;
-    await insertBookmark(userId, recipeId);
+    const alreadyExists = await checkIfAlreadyBookmarked(userId, recipeId);
+    if (!alreadyExists) {
+      await insertBookmark(userId, recipeId);
+    }
     return res.json({ success: true });
   } catch (err) {
     next(err);

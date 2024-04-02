@@ -14,11 +14,14 @@ export const findAllBookmarksByUserId = async (userId) => {
 
 export const deleteBookmark = async (userId, recipeId) => {
   const sql = `delete from bookmark where userId=? and recipeId=?`;
-  await pool.query(sql, [userId, recipeId]);
+  const res = await pool.query(sql, [userId, recipeId]);
 };
 
-export const allbookmark = async (userId) => {
-  const sql = `select recipeId from bookMark where usesrId = ?`;
-  const res = await pool.query(sql, [userId]);
-  return res;
+export const checkIfAlreadyBookmarked = async (userId, recipeId) => {
+  const sql = `SELECT * FROM bookmark where userId=? and recipeId=?`;
+  const [bookmarks] = await pool.query(sql, [userId, recipeId]);
+  if (bookmarks.length > 0) {
+    return true;
+  }
+  return false;
 };

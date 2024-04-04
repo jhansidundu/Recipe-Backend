@@ -15,9 +15,16 @@ export const signup = async (req, res, next) => {
     const isMobileValid = validateMobileNumber(phoneNumber);
 
     if (!(isEmailValid && isPassValid && isMobileValid)) {
-      res.status("400");
+      res.status(400);
       throw new Error("Invalid input");
     }
+
+    const existingUser = await findUserByEmail(email);
+    if (existingUser) {
+      res.status(400);
+      throw new Error("Email already exists");
+    }
+
     const encryptedPassword = await createPasswordHash(password);
     await insertUser(name, email, phoneNumber, encryptedPassword);
     const userId = findUserIdByEmail(email);
@@ -43,7 +50,8 @@ export const login = async (req, res, next) => {
     const existingUser = await findUserByEmail(email);
 
     if (!existingUser) {
-      throw new Error("user not exist");
+      res.status(400);
+      throw new Error("Invalid credentials");
     }
     if (existingUser) {
       const hashedPassword = existingUser.password;

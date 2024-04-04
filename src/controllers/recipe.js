@@ -14,9 +14,24 @@ export const getPopularRecipes = async (_, res, next) => {
 
 export const getSearchedRecipes = async (req, res, next) => {
   try {
-    const { query, offset = 0, number = 10 } = req.query;
+    const {
+      query,
+      offset = 0,
+      number = 10,
+      type,
+      cuisine,
+      diet,
+      intolerances,
+    } = req.query;
+
     const recipes = await axios.get(
-      `${SPOONACULAR_API_URL}/complexSearch?apiKey=${API_KEY}&query=${query}&offset=${offset}&number=${number}`
+      `${SPOONACULAR_API_URL}/complexSearch?apiKey=${API_KEY}${
+        !!query ? "&query=" + query : ""
+      }&offset=${offset}&number=${number}&${!!type ? "&type=" + type : ""}${
+        !!cuisine ? "&cuisine=" + cuisine : ""
+      }${!!diet ? "&diet=" + diet : ""}${
+        !!intolerances ? "&intolerances=" + intolerances : ""
+      }`
     );
     return res.json({ success: true, data: recipes.data });
   } catch (err) {

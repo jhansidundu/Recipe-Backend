@@ -33,15 +33,19 @@ export const signup = async (req, res, next) => {
     const encryptedPassword = await createPasswordHash(password);
 
     // insert user information into user table
-    await insertUser(name, email, phoneNumber, encryptedPassword);
+    const userId = await insertUser(
+      name,
+      email,
+      phoneNumber,
+      encryptedPassword
+    );
 
-    // get user information through email
-    const userId = findUserIdByEmail(email);
     const user = {
       id: userId,
       name,
       email,
     };
+    // console.log(user);
 
     // generate accesstoken with user info
     const accessToken = generateAccessToken(user);

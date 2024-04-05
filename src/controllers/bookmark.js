@@ -10,6 +10,7 @@ import { API_KEY, SPOONACULAR_API_URL } from "../util/constants.js";
 // add liked recipe to bookmark table
 export const addBookmark = async (req, res, next) => {
   try {
+    console.log(req.user);
     const { id: userId } = req.user;
     const { recipeId } = req.body;
     const alreadyExists = await checkIfAlreadyBookmarked(userId, recipeId);

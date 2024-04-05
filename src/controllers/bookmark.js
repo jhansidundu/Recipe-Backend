@@ -60,3 +60,14 @@ export const getAllBookmarks = async (req, res, next) => {
     next(err);
   }
 };
+
+export const alreadyBookmarked = async (req, res, next) => {
+  try {
+    const { id: userId } = req.user;
+    const { recipeId } = req.params;
+    const bookmarked = await checkIfAlreadyBookmarked(userId, recipeId);
+    return res.json({ success: true, data: { bookmarked } });
+  } catch (err) {
+    next(err);
+  }
+};

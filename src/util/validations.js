@@ -1,4 +1,4 @@
-// Function for validating the email
+// validating email using regex
 export const validateEmail = (email) => {
   return String(email)
     .toLowerCase()
@@ -8,6 +8,7 @@ export const validateEmail = (email) => {
 };
 
 // function for validating password
+
 export const validatePassword = (pass) => {
   if (pass.length !== null && pass.length >= 6) {
     return true;

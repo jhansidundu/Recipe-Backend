@@ -55,8 +55,8 @@ export const login = async (req, res, next) => {
     }
     if (existingUser) {
       const hashedPassword = existingUser.password;
-      const validation = await bcrypt.compare(password, hashedPassword);
-      if (validation) {
+      const isPasswordValid = await bcrypt.compare(password, hashedPassword);
+      if (isPasswordValid) {
         const { id, name, email } = existingUser;
         const user = {
           id,

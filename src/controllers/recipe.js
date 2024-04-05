@@ -17,22 +17,37 @@ export const getSearchedRecipes = async (req, res, next) => {
     const {
       query,
       offset = 0,
-      number = 10,
+      number = 50,
       type,
       cuisine,
       diet,
       intolerances,
-    } = req.query;
+    } = req.body;
+    let url = `${SPOONACULAR_API_URL}/complexSearch?apiKey=${API_KEY}`;
+    if (!!query) {
+      url = url + `&query=${query}`;
+    }
+    if (!!offset) {
+      url = url + `&offset=${offset}`;
+    }
+    if (!!number) {
+      url = url + `&number=${number}`;
+    }
+    if (!!type) {
+      url = url + `&type=${type}`;
+    }
+    if (!!cuisine) {
+      url = url + `&cuisine=${cuisine}`;
+    }
+    if (!!diet) {
+      url = url + `&diet=${diet}`;
+    }
+    if (!!intolerances) {
+      url = url + `&intolerances=${intolerances}`;
+    }
 
-    const recipes = await axios.get(
-      `${SPOONACULAR_API_URL}/complexSearch?apiKey=${API_KEY}${
-        !!query ? "&query=" + query : ""
-      }&offset=${offset}&number=${number}&${!!type ? "&type=" + type : ""}${
-        !!cuisine ? "&cuisine=" + cuisine : ""
-      }${!!diet ? "&diet=" + diet : ""}${
-        !!intolerances ? "&intolerances=" + intolerances : ""
-      }`
-    );
+    console.log(url);
+    const recipes = await axios.get(url);
     return res.json({ success: true, data: recipes.data });
   } catch (err) {
     next(err);

@@ -7,11 +7,14 @@ import {
 import axios from "axios";
 import { API_KEY, SPOONACULAR_API_URL } from "../util/constants.js";
 
+// add liked recipe to bookmark table
 export const addBookmark = async (req, res, next) => {
   try {
     const { id: userId } = req.user;
     const { recipeId } = req.body;
     const alreadyExists = await checkIfAlreadyBookmarked(userId, recipeId);
+
+    // if recipe is not in bookmark
     if (!alreadyExists) {
       await insertBookmark(userId, recipeId);
     }
@@ -21,6 +24,7 @@ export const addBookmark = async (req, res, next) => {
   }
 };
 
+// remove recipe from bookmark
 export const removeBookmark = async (req, res, next) => {
   try {
     const { id: userId } = req.user;
@@ -32,6 +36,7 @@ export const removeBookmark = async (req, res, next) => {
   }
 };
 
+// getting all bookmarks
 export const getAllBookmarks = async (req, res, next) => {
   try {
     const id = req.user.id;
@@ -40,7 +45,11 @@ export const getAllBookmarks = async (req, res, next) => {
     if (!bookmarkIds) {
       bookmarkIds = [];
     }
+
+    // getting all bookmarked recipes ids
     const recipeIds = bookmarkIds.map((bm) => bm.recipeId).join(",");
+
+    // gettings all bookmark recipes
     const bookmarks = (
       await axios.get(
         `${SPOONACULAR_API_URL}/informationBulk?apiKey=${API_KEY}&ids=${recipeIds}`

@@ -1,6 +1,7 @@
 import axios from "axios";
 import { API_KEY, SPOONACULAR_API_URL } from "../util/constants.js";
 
+// get 100 popular recipes
 export const getPopularRecipes = async (_, res, next) => {
   try {
     const recipes = await axios.get(
@@ -12,6 +13,7 @@ export const getPopularRecipes = async (_, res, next) => {
   }
 };
 
+// getting search recipes
 export const getSearchedRecipes = async (req, res, next) => {
   try {
     const {
@@ -24,6 +26,8 @@ export const getSearchedRecipes = async (req, res, next) => {
       intolerances,
     } = req.body;
     let url = `${SPOONACULAR_API_URL}/complexSearch?apiKey=${API_KEY}`;
+
+    // filters
     if (!!query) {
       url = url + `&query=${query}`;
     }
@@ -54,6 +58,7 @@ export const getSearchedRecipes = async (req, res, next) => {
   }
 };
 
+// get recipe details on clicking recipe
 export const getRecipeDetails = async (req, res, next) => {
   try {
     const { recipeId } = req.params;

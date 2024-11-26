@@ -11,6 +11,7 @@ import { API_KEY, SPOONACULAR_API_URL } from "../util/constants.js";
 export const addBookmark = async (req, res, next) => {
   try {
     console.log(req.user);
+    console.log('bookmark**')
     const { id: userId } = req.user;
     const { recipeId } = req.body;
     const alreadyExists = await checkIfAlreadyBookmarked(userId, recipeId);
